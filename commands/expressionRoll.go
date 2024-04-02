@@ -36,22 +36,17 @@ func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate)
 		expression := strings.ReplaceAll(options[0].StringValue(), " ", "")
 
 		user := i.Member
-
 		total, rolls, err := utility.ExpressionRoll(expression)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		rollsString := utility.ConvertRollsToString(rolls)
-
-		embed := &discordgo.MessageEmbed {
-			Title: fmt.Sprintf("%s\nTotal: %v", expression, total),
-			Author: &discordgo.MessageEmbedAuthor {
-				Name: fmt.Sprintf("%s for %v", user.Nick, options[1].StringValue()),
-				IconURL: user.User.AvatarURL(""),
-			},
-			Description: rollsString,
+		rollFor := ""
+		if len(options) == 2 {
+			rollFor = options[1].StringValue()
 		}
+
+		embed := utility.EmbedMaker(expression, rollFor, total, rolls, user)
 
 		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
