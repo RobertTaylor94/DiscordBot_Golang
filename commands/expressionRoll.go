@@ -38,6 +38,8 @@ func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate)
 		total := 0
 		rolls := make([]int, 0)
 
+		user := i.Member
+
 		// split expression into component parts
 		initialSplit := strings.Split(expression, "+")
 		for _, v := range initialSplit {
@@ -61,12 +63,21 @@ func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate)
 			}
 		}
 
-		
+		embed := &discordgo.MessageEmbed {
+			Title: fmt.Sprintf("%s\nTotal: %v", expression, total),
+			Author: &discordgo.MessageEmbedAuthor {
+				Name: fmt.Sprintf(user.Nick),
+				IconURL: user.User.AvatarURL(""),
+			},
+			
+		}
 
 		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: fmt.Sprintf("Total: %v", total),
+				Embeds: []*discordgo.MessageEmbed{
+					embed,
+				},
 			},
 		}); err != nil {
 			fmt.Println(err)
