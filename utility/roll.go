@@ -17,7 +17,10 @@ func ExpressionRoll(exp string) (int, []int, error) {
 			if strings.Contains(v, "d") {
 				// split roll find type and number of dice
 				roll := strings.Split(v, "d")
-				num := roll[0]
+				num, err := strconv.Atoi(roll[0])
+				if err != nil {
+					return 0, nil, fmt.Errorf("error converting number of dice to int: %v", err)
+				}
 				sides, err := strconv.Atoi(roll[1])
 				if err != nil {
 					return 0, nil, fmt.Errorf("error converting sides to int: %v", err)
