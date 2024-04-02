@@ -3,10 +3,9 @@ package bot
 import (
 	"fmt"
 	"log"
+	"murvoth/legend-bot/commands"
 	"os"
 	"os/signal"
-
-	"murvoth/legend-bot/commands"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -21,7 +20,6 @@ func Run(appId, guildID, token string) {
 	discord.AddHandler(commands.ExpressionRollHandler)
 
 	fmt.Println("adding commands...")
-
 	commands.InitialiseSlashCommands(discord, appId, guildID)
 
 	if err := discord.Open(); err != nil {
