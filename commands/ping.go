@@ -1,6 +1,8 @@
 package commands
 
-import(
+import (
+	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -10,10 +12,14 @@ var PingCommand = &discordgo.ApplicationCommand {
 }
 
 func PingHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	fmt.Println("running ping command")
 	if i.ApplicationCommandData().Name == "ping" {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{Content: "Pong!"},
 		})
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
