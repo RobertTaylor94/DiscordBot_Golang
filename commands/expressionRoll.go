@@ -25,13 +25,13 @@ var options = []*discordgo.ApplicationCommandOption{
 }
 
 var ExpressionRoll = &discordgo.ApplicationCommand{
-	Name:        "q",
+	Name:        "r",
 	Description: "Roll dice with an expression",
 	Options: options,
 }
 
 func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	if i.ApplicationCommandData().Name == "q" {
+	if i.ApplicationCommandData().Name == "r" {
 		options := i.ApplicationCommandData().Options
 		expression := strings.ReplaceAll(options[0].StringValue(), " ", "")
 
@@ -66,7 +66,7 @@ func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate)
 		embed := &discordgo.MessageEmbed {
 			Title: fmt.Sprintf("%s\nTotal: %v", expression, total),
 			Author: &discordgo.MessageEmbedAuthor {
-				Name: fmt.Sprintf(user.Nick),
+				Name: fmt.Sprintf("%s for %v", user.Nick, options[1].StringValue()),
 				IconURL: user.User.AvatarURL(""),
 			},
 			

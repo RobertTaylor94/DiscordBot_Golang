@@ -12,7 +12,6 @@ var PingCommand = &discordgo.ApplicationCommand{
 }
 
 func PingHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	fmt.Println("running ping command")
 	if i.ApplicationCommandData().Name == "ping" {
 		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
