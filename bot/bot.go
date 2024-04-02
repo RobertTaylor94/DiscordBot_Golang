@@ -18,6 +18,7 @@ func Run(appId, guildID, token string) {
 	}
 
 	discord.AddHandler(commands.PingHandler)
+	discord.AddHandler(commands.ExpressionRollHandler)
 
 	fmt.Println("adding commands...")
 

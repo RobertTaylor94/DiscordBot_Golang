@@ -10,6 +10,7 @@ func InitialiseSlashCommands(bot *discordgo.Session, appId, guildId string) {
 	registeredCommands := make([]*discordgo.ApplicationCommand, 0)
 
 	registeredCommands = append(registeredCommands, PingCommand)
+	registeredCommands = append(registeredCommands, ExpressionRoll)
 
 	for _, i := range registeredCommands {
 		fmt.Println(i.Name)
