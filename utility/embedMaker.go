@@ -6,7 +6,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func EmbedMaker(exp, rollFor string, total int, rolls []int, user *discordgo.Member) *discordgo.MessageEmbed {
+func EmbedMaker(exp, rollFor string, total int, rolls []Roll, user *discordgo.Member) *discordgo.MessageEmbed {
 
 	name := user.Nick
 	if rollFor != "" {

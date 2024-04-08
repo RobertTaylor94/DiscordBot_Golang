@@ -7,10 +7,15 @@ import (
 	"fmt"
 )
 
-func ExpressionRoll(exp string) (int, []int, error) {
+type Roll struct {
+	dice int
+	roll int
+}
+
+func ExpressionRoll(exp string) (int, []Roll, error) {
 
 		total := 0
-		rolls := make([]int, 0)
+		rolls := make([]Roll, 0)
 
 	initialSplit := strings.Split(exp, "+")
 		for _, v := range initialSplit {
@@ -28,7 +33,7 @@ func ExpressionRoll(exp string) (int, []int, error) {
 				// roll dice and add value to total
 				for range num {
 					roll := rand.Intn(sides) + 1
-					rolls = append(rolls, roll)
+					rolls = append(rolls, Roll{sides, roll})
 					total += roll
 				}
 			} else {
