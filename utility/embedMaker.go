@@ -12,15 +12,16 @@ func EmbedMaker(exp, rollFor string, total int, rolls []Roll, user *discordgo.Me
 	if rollFor != "" {
 		name = fmt.Sprintf("%s for %s", user.Nick, rollFor)
 	}
-	rollsString := ConvertRollsToString(rolls)
 
-	embed := &discordgo.MessageEmbed {
-		Title: fmt.Sprintf("%s\nTotal: %v", exp, total),
+	embed := &discordgo.MessageEmbed{
+		Title: fmt.Sprintf("%s\n**Total: %v**", exp, total),
 		Author: &discordgo.MessageEmbedAuthor{
-			Name: name,
+			Name:    name,
 			IconURL: user.AvatarURL(""),
 		},
-		Description: rollsString,
+		Image: &discordgo.MessageEmbedImage{
+			URL: "attachment://image.png",
+		},
 	}
 	return embed
 }

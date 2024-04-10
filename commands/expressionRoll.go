@@ -2,31 +2,31 @@ package commands
 
 import (
 	"fmt"
-	"strings"
 	"murvoth/legend-bot/utility"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 var options = []*discordgo.ApplicationCommandOption{
 	{
-		Type: discordgo.ApplicationCommandOptionString,
-		Name: "expression",
+		Type:        discordgo.ApplicationCommandOptionString,
+		Name:        "expression",
 		Description: "The dice roll expression (e.g. 1d10 + 1d4 + 7)",
-		Required: true,
+		Required:    true,
 	},
 	{
-		Type: discordgo.ApplicationCommandOptionString,
-		Name: "roll_type",
+		Type:        discordgo.ApplicationCommandOptionString,
+		Name:        "roll_type",
 		Description: "What are you rolling for",
-		Required: false,
+		Required:    false,
 	},
 }
 
 var ExpressionRoll = &discordgo.ApplicationCommand{
 	Name:        "r",
 	Description: "Roll dice with an expression",
-	Options: options,
+	Options:     options,
 }
 
 func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -46,6 +46,11 @@ func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate)
 			rollFor = options[1].StringValue()
 		}
 
+		file, err := utility.GetDiceImage("", rolls)
+		if err != nil {
+			fmt.Printf("error GetDiceImage(): %v", err)
+		}
+
 		embed := utility.EmbedMaker(expression, rollFor, total, rolls, user)
 
 		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -53,6 +58,9 @@ func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate)
 			Data: &discordgo.InteractionResponseData{
 				Embeds: []*discordgo.MessageEmbed{
 					embed,
+				},
+				Files: []*discordgo.File{
+					file,
 				},
 			},
 		}); err != nil {
