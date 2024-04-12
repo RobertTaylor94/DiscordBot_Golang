@@ -6,7 +6,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func InitialiseSlashCommands(bot *discordgo.Session, appId string) {
+func InitialiseSlashCommands(bot *discordgo.Session, guildID, appId string) {
 	registeredCommands := make([]*discordgo.ApplicationCommand, 0)
 
 	registeredCommands = append(registeredCommands, PingCommand)
@@ -18,7 +18,7 @@ func InitialiseSlashCommands(bot *discordgo.Session, appId string) {
 	}
 
 	for _, cmd := range registeredCommands {
-		_, err := bot.ApplicationCommandCreate(appId, "", cmd)
+		_, err := bot.ApplicationCommandCreate(appId, guildID, cmd)
 		if err != nil {
 			fmt.Println(err)
 		}
