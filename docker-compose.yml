@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  legend-bot:
+    build: .
+    environment:
+      APP_ID: ${APP_ID}
+      BOT_TOKEN: ${BOT_TOKEN}
