@@ -10,17 +10,17 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func Run(appId, guildID, token string) {
+func Run(appId, token string) {
 	discord, err := discordgo.New("Bot " + token)
 	if err != nil {
 		log.Fatalf("error creating session: %v", err)
 	}
 
+	fmt.Println("adding commands...")
 	discord.AddHandler(commands.PingHandler)
 	discord.AddHandler(commands.ExpressionRollHandler)
-
-	fmt.Println("adding commands...")
-	commands.InitialiseSlashCommands(discord, appId, guildID)
+	discord.AddHandler(commands.CustomRollHandler)
+	commands.InitialiseSlashCommands(discord, appId)
 
 	if err := discord.Open(); err != nil {
 		log.Fatalf("error opening connection: %v", err)
