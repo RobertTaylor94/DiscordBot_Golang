@@ -8,7 +8,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-var options = []*discordgo.ApplicationCommandOption{
+var expOptions = []*discordgo.ApplicationCommandOption{
 	{
 		Type:        discordgo.ApplicationCommandOptionString,
 		Name:        "expression",
@@ -26,7 +26,7 @@ var options = []*discordgo.ApplicationCommandOption{
 var ExpressionRoll = &discordgo.ApplicationCommand{
 	Name:        "r",
 	Description: "Roll dice with an expression",
-	Options:     options,
+	Options:     expOptions,
 }
 
 func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {

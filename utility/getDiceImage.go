@@ -73,8 +73,6 @@ func GetDiceImage(id string, rolls []Roll) (*discordgo.File, error) {
 	return dsFile, nil
 }
 
-// paths, _ := utility.GetDiceImage("", rolls)
-
 func getFilePath(roll Roll) string {
 	imgName := fmt.Sprintf("d%vs%v.png", roll.dice, roll.roll)
 	imgFolder := fmt.Sprintf("d%v", roll.dice)
