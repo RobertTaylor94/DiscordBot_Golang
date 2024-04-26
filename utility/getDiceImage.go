@@ -12,6 +12,7 @@ import (
 )
 
 func GetDiceImage(id string, rolls []Roll) (*discordgo.File, error) {
+	fmt.Println("starting GetDiceImage")
 	paths := make([]string, 0)
 	files := make([]*os.File, 0)
 	images := make([]image.Image, 0)
@@ -33,6 +34,7 @@ func GetDiceImage(id string, rolls []Roll) (*discordgo.File, error) {
 		image, _, err := image.Decode(file)
 		if err != nil {
 			fmt.Println(err)
+			return nil, err
 		}
 		images = append(images, image)
 	}
