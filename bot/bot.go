@@ -20,6 +20,7 @@ func Run(appId, guildID, token string) {
 	discord.AddHandler(commands.PingHandler)
 	discord.AddHandler(commands.ExpressionRollHandler)
 	discord.AddHandler(commands.CustomRollHandler)
+	discord.AddHandler(commands.ConfigHandler)
 	commands.InitialiseSlashCommands(discord, guildID, appId)
 
 	if err := discord.Open(); err != nil {
