@@ -1,17 +1,16 @@
 package utility
 
 import (
-
 	"github.com/bwmarrin/discordgo"
 )
 
 type roll struct {
-	Name        string
-	Type        string
-	Expression  string
-	DamageExp   string
-	Bonus       int
-	DamageBonus string
+	Name        string `json:"name"`
+	Type        string `json:"type"`
+	Expression  string `json:"expression"`
+	DamageExp   string `json:"damageExp,omitempty"`
+	Bonus       int    `json:"bonus,omitempty"`
+	DamageBonus string `json:"damageBonus,omitempty"`
 }
 
 func NewCR(opts []*discordgo.ApplicationCommandInteractionDataOption) roll {
