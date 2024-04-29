@@ -46,25 +46,35 @@ func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate)
 			rollFor = options[1].StringValue()
 		}
 
-		file, err := utility.GetDiceImage("", rolls)
+		file, err := utility.GetDiceImage(i.Member.User.ID, rolls)
 		if err != nil {
 			fmt.Printf("error GetDiceImage(): %v", err)
-		}
-
-		embed := utility.EmbedMaker(expression, rollFor, total, rolls, user)
-
-		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Embeds: []*discordgo.MessageEmbed{
-					embed,
+			embed := utility.RollEmbedMaker(expression, rollFor, total, rolls, user)
+			if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Embeds: []*discordgo.MessageEmbed{
+						embed,
+					},
 				},
-				Files: []*discordgo.File{
-					file,
+			}); err != nil {
+				fmt.Println(err)
+			}
+		} else {
+			embed := utility.RollEmbedMaker(expression, rollFor, total, rolls, user)
+			if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Embeds: []*discordgo.MessageEmbed{
+						embed,
+					},
+					Files: []*discordgo.File{
+						file,
+					},
 				},
-			},
-		}); err != nil {
-			fmt.Println(err)
+			}); err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
 }
