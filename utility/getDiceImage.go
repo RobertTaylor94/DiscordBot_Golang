@@ -13,13 +13,21 @@ import (
 
 func GetDiceImage(id string, rolls []Roll) (*discordgo.File, error) {
 	fmt.Println("starting GetDiceImage")
-	paths := make([]string, 0)
 	files := make([]*os.File, 0)
 	images := make([]image.Image, 0)
+	var paths []string
 
-	for _, roll := range rolls {
-		path := getFilePath(roll)
-		paths = append(paths, path)
+	user, ok := Users[id]
+	if !ok {
+		paths = getFilePath(rolls, "cream")
+	} else {
+		fmt.Println(user.Color)
+		switch user.Color {
+		case "purple":
+			paths = getFilePath(rolls, "purple")
+		default:
+			paths = getFilePath(rolls, "cream")
+		}
 	}
 
 	for _, path := range paths {
@@ -75,9 +83,14 @@ func GetDiceImage(id string, rolls []Roll) (*discordgo.File, error) {
 	return dsFile, nil
 }
 
-func getFilePath(roll Roll) string {
-	imgName := fmt.Sprintf("d%vs%v.png", roll.dice, roll.roll)
-	imgFolder := fmt.Sprintf("d%v", roll.dice)
-	imgPath := filepath.Join("assets", imgFolder, imgName)
-	return imgPath
+func getFilePath(rolls []Roll, color string) []string {
+	paths := make([]string, 0)
+	for _, roll := range rolls {
+		imgName := fmt.Sprintf("d%vs%v.png", roll.dice, roll.roll)
+		imgFolder := fmt.Sprintf("d%v", roll.dice)
+		imgPath := filepath.Join("assets", color, imgFolder, imgName)
+		paths = append(paths, imgPath)
+	}
+
+	return paths
 }
