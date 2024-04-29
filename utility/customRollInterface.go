@@ -4,7 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type roll struct {
+type CustomRoll struct {
 	Name        string `json:"name"`
 	Type        string `json:"type"`
 	Expression  string `json:"expression"`
@@ -13,8 +13,8 @@ type roll struct {
 	DamageBonus string `json:"damageBonus,omitempty"`
 }
 
-func NewCR(opts []*discordgo.ApplicationCommandInteractionDataOption) roll {
-	newRoll := roll{}
+func NewCR(opts []*discordgo.ApplicationCommandInteractionDataOption) CustomRoll {
+	newRoll := CustomRoll{}
 
 	for _, opts := range opts {
 		switch opts.Name {
