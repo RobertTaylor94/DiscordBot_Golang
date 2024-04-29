@@ -18,11 +18,11 @@ var crCommandOptions = []*discordgo.ApplicationCommandOption{
 				Type:        discordgo.ApplicationCommandOptionString,
 				Name:        "name",
 				Description: "The name of your custom roll",
-				Required: true,
+				Required:    true,
 			},
 			{
-				Type: discordgo.ApplicationCommandOptionString,
-				Name: "bonus",
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "bonus",
 				Description: "Additional bonus to this roll",
 			},
 		},
@@ -77,7 +77,7 @@ var crCommandOptions = []*discordgo.ApplicationCommandOption{
 				Type:        discordgo.ApplicationCommandOptionString,
 				Name:        "roll_name",
 				Description: "The name of your custom roll",
-				Required: true,
+				Required:    true,
 			},
 		},
 	},
@@ -126,6 +126,7 @@ func roll(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		bonus = i.ApplicationCommandData().Options[0].Options[1].StringValue()
 	}
 	userRolls := customRolls[i.Member.User.ID]
+	found := false
 	for _, r := range userRolls.Rolls {
 		if r.Name == rolling.StringValue() {
 			total, rolls, err := utility.ExpressionRoll(fmt.Sprintf("%s + %s", r.Expression, bonus))
@@ -134,8 +135,23 @@ func roll(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			}
 			embed = utility.RollEmbedMaker(r.Expression, r.Name, total, rolls, i.Member)
 			file, err = utility.GetDiceImage(i.Member.User.ID, rolls)
-			if err != nil { fmt.Sprintln(err) }
+			if err != nil {
+				fmt.Sprintln(err)
+			}
+			found = true
 		}
+	}
+
+	if !found {
+			if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: fmt.Sprintf("%s not found", rolling.StringValue()),
+				},
+			}); err != nil {
+				fmt.Println(err)
+			}
+			return
 	}
 
 	if err != nil {
