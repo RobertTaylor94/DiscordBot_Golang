@@ -2,15 +2,20 @@ package utility
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
-	"fmt"
 )
 
 var Users = map[string]Properties{}
+var CustomRolls = map[string]UserRolls{}
 
 type Properties struct {
 	Color string `json:"color"`
+}
+
+type UserRolls struct {
+	Rolls []CustomRoll `json:"rolls"`
 }
 
 func LoadUserConfig() (map[string]Properties, error) {
@@ -28,7 +33,9 @@ func LoadUserConfig() (map[string]Properties, error) {
 func GetUserConfig() (map[string]Properties, error) {
 	if len(Users) == 0 {
 		users, err := LoadUserConfig()
-		if err != nil {fmt.Printf("Error loading user config: %v", err)}
+		if err != nil {
+			fmt.Printf("Error loading user config: %v", err)
+		}
 		Users = users
 		return Users, nil
 	}
@@ -41,7 +48,45 @@ func SaveUserConfig(users map[string]Properties) error {
 	if err != nil {
 		return err
 	}
-	if err := saveFile("userconfig.json", data); err != nil {return err}
+	if err := saveFile("userconfig.json", data); err != nil {
+		return err
+	}
+	return nil
+}
+
+func LoadCustomRolls() (map[string]UserRolls, error) {
+	data, err := loadFile("customrolls.json")
+	if err != nil {
+		return nil, err
+	}
+	var rolls map[string]UserRolls
+	if err := json.Unmarshal(data, &rolls); err != nil {
+		return nil, err
+	}
+	return rolls, nil
+}
+
+func GetCustomRolls() (map[string]UserRolls, error) {
+	if len(CustomRolls) == 0 {
+		rolls, err := LoadCustomRolls()
+		if err != nil {
+			return nil, err
+		}
+		CustomRolls = rolls
+		return CustomRolls, nil
+	}
+	return CustomRolls, nil
+}
+
+func SaveCustomRolls(rolls map[string]UserRolls) error {
+	CustomRolls = rolls
+	data, err := json.Marshal(rolls)
+	if err != nil {
+		return err
+	}
+	if err := saveFile("customrolls.json", data); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -58,7 +103,7 @@ func loadFile(name string) ([]byte, error) {
 	filePath := filepath.Join("data", name)
 	file, err := os.ReadFile(filePath)
 	if err != nil {
-		return nil ,err
+		return nil, err
 	}
 	return file, nil
 }
