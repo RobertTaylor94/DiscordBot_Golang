@@ -18,6 +18,12 @@ var crCommandOptions = []*discordgo.ApplicationCommandOption{
 				Type:        discordgo.ApplicationCommandOptionString,
 				Name:        "name",
 				Description: "The name of your custom roll",
+				Required: true,
+			},
+			{
+				Type: discordgo.ApplicationCommandOptionString,
+				Name: "bonus",
+				Description: "Additional bonus to this roll",
 			},
 		},
 	},
@@ -71,6 +77,7 @@ var crCommandOptions = []*discordgo.ApplicationCommandOption{
 				Type:        discordgo.ApplicationCommandOptionString,
 				Name:        "roll_name",
 				Description: "The name of your custom roll",
+				Required: true,
 			},
 		},
 	},
@@ -113,10 +120,11 @@ func roll(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		fmt.Println(err)
 	}
 	rolling := i.ApplicationCommandData().Options[0].Options[0]
+	bonus := i.ApplicationCommandData().Options[0].Options[1].StringValue()
 	userRolls := customRolls[i.Member.User.ID]
 	for _, r := range userRolls.Rolls {
 		if r.Name == rolling.StringValue() {
-			total, rolls, err := utility.ExpressionRoll(r.Expression)
+			total, rolls, err := utility.ExpressionRoll(fmt.Sprintf("%s + %s", r.Expression, bonus))
 			if err != nil {
 				fmt.Println(err)
 			}
