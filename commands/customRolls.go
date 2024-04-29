@@ -120,7 +120,11 @@ func roll(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		fmt.Println(err)
 	}
 	rolling := i.ApplicationCommandData().Options[0].Options[0]
-	bonus := i.ApplicationCommandData().Options[0].Options[1].StringValue()
+
+	bonus := ""
+	if len(i.ApplicationCommandData().Options[0].Options) == 2 {
+		bonus = i.ApplicationCommandData().Options[0].Options[1].StringValue()
+	}
 	userRolls := customRolls[i.Member.User.ID]
 	for _, r := range userRolls.Rolls {
 		if r.Name == rolling.StringValue() {

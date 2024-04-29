@@ -44,7 +44,8 @@ func ExpressionRoll(exp string) (int, []Roll, error) {
 			}
 		} else {
 			// add bonuses to roll total
-			bonus, err := strconv.Atoi(v)
+			trim := strings.TrimSpace(v)
+			bonus, err := strconv.Atoi(trim)
 			if err != nil {
 				fmt.Println("Error converting bonus to int", err)
 			}
