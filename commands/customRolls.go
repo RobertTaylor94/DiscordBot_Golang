@@ -114,18 +114,22 @@ func CustomRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 func roll(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	customRolls, err := utility.GetCustomRolls()
-	var embed *discordgo.MessageEmbed
-	var file *discordgo.File
 	if err != nil {
 		fmt.Println(err)
 	}
+	userRolls := customRolls[i.Member.User.ID]
+	var embed *discordgo.MessageEmbed
+	var file *discordgo.File
+
+	// Gets the name of the custom roll to be rolled from the user input
 	rolling := i.ApplicationCommandData().Options[0].Options[0]
 
+	// Get bonus to custom roll
 	bonus := ""
 	if len(i.ApplicationCommandData().Options[0].Options) == 2 {
 		bonus = i.ApplicationCommandData().Options[0].Options[1].StringValue()
 	}
-	userRolls := customRolls[i.Member.User.ID]
+
 	found := false
 	for _, r := range userRolls.Rolls {
 		if r.Name == rolling.StringValue() {
@@ -133,7 +137,11 @@ func roll(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			if err != nil {
 				fmt.Println(err)
 			}
-			embed = utility.RollEmbedMaker(r.Expression, r.Name, total, rolls, i.Member)
+			exp := r.Expression
+			if bonus != "" {
+				exp = fmt.Sprintf("%s + %s", r.Expression, bonus)
+			}
+			embed = utility.RollEmbedMaker(exp, r.Name, total, rolls, i.Member)
 			file, err = utility.GetDiceImage(i.Member.User.ID, rolls)
 			if err != nil {
 				fmt.Sprintln(err)
@@ -141,19 +149,18 @@ func roll(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			found = true
 		}
 	}
-
 	if !found {
-			if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: fmt.Sprintf("%s not found", rolling.StringValue()),
-				},
-			}); err != nil {
-				fmt.Println(err)
-			}
-			return
+		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: fmt.Sprintf("%s not found", rolling.StringValue()),
+				Flags:   discordgo.MessageFlagsEphemeral,
+			},
+		}); err != nil {
+			fmt.Println(err)
+		}
+		return
 	}
-
 	if err != nil {
 		fmt.Printf("error GetDiceImage(): %v", err)
 		if err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
