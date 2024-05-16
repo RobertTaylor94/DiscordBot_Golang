@@ -33,6 +33,18 @@ var configOptions = []*discordgo.ApplicationCommandOption{
 						Name:  "purple",
 						Value: "purple",
 					},
+					{
+						Name:  "orange",
+						Value: "orange",
+					},
+					{
+						Name:  "blue",
+						Value: "blue",
+					},
+					{
+						Name:  "green",
+						Value: "green",
+					},
 				},
 			},
 		},
@@ -108,7 +120,7 @@ func updateConfig(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	newColor := opts.Options[0].Value.(string)
 	userId := i.Member.User.ID
 	user, ok := users[userId]
-	
+
 	// If user not found, create a new user with the desired property
 	// If the user already exists, updated their configuration with the new property
 	if !ok {

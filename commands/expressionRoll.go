@@ -24,13 +24,13 @@ var expOptions = []*discordgo.ApplicationCommandOption{
 }
 
 var ExpressionRoll = &discordgo.ApplicationCommand{
-	Name:        "r",
+	Name:        "q",
 	Description: "Roll dice with an expression",
 	Options:     expOptions,
 }
 
 func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	if i.ApplicationCommandData().Name == "r" {
+	if i.ApplicationCommandData().Name == "q" {
 		options := i.ApplicationCommandData().Options
 
 		expression := strings.ReplaceAll(options[0].StringValue(), " ", "")
@@ -47,6 +47,7 @@ func ExpressionRollHandler(s *discordgo.Session, i *discordgo.InteractionCreate)
 		}
 
 		file, err := utility.GetDiceImage(i.Member.User.ID, rolls)
+
 		if err != nil {
 			fmt.Printf("error GetDiceImage(): %v", err)
 			embed := utility.RollEmbedMaker(expression, rollFor, total, rolls, user)

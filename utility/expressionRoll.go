@@ -19,7 +19,35 @@ func ExpressionRoll(exp string) (int, []Roll, error) {
 
 	initialSplit := strings.Split(exp, "+")
 	for _, v := range initialSplit {
-		if strings.Contains(v, "d") {
+		if strings.Contains(v, "d100") {
+			// handle percentile rolls
+			roll := strings.Split(v, "d")
+			num := 0
+			if roll[0] == "" {
+				num = 1
+			} else {
+				numb, err := strconv.Atoi(roll[0])
+				if err != nil {
+					return 0, nil, fmt.Errorf("error converting number of dice to int: %v", err)
+				}
+				num = numb
+			}
+			// roll d100
+			for range num {
+				roll := (rand.Intn(10) + 1) * 10
+				rolls = append(rolls, Roll{100, roll})
+				total += roll
+			}
+			// roll d10
+			if total < 100 {
+				for range num {
+					roll := (rand.Intn(10) + 1)
+					rolls = append(rolls, Roll{10, roll})
+					total += roll
+				}
+			}
+
+		} else if strings.Contains(v, "d") {
 			// split roll find type and number of dice
 			roll := strings.Split(v, "d")
 			num := 0

@@ -9,10 +9,12 @@ import (
 	"path/filepath"
 
 	"github.com/bwmarrin/discordgo"
+	// "github.com/nfnt/resize"
 )
 
+// const fixedHeight = 100
+
 func GetDiceImage(id string, rolls []Roll) (*discordgo.File, error) {
-	fmt.Println("starting GetDiceImage")
 	files := make([]*os.File, 0)
 	images := make([]image.Image, 0)
 	var paths []string
@@ -25,6 +27,12 @@ func GetDiceImage(id string, rolls []Roll) (*discordgo.File, error) {
 		switch user.Color {
 		case "purple":
 			paths = getFilePath(rolls, "purple")
+		case "orange":
+			paths = getFilePath(rolls, "orange")
+		case "blue":
+			paths = getFilePath(rolls, "blue")
+		case "green":
+			paths = getFilePath(rolls, "green")
 		default:
 			paths = getFilePath(rolls, "cream")
 		}
@@ -44,6 +52,7 @@ func GetDiceImage(id string, rolls []Roll) (*discordgo.File, error) {
 			fmt.Println(err)
 			return nil, err
 		}
+		// scaledImg := resize.Resize(0, fixedHeight, image, resize.Lanczos3)
 		images = append(images, image)
 	}
 
