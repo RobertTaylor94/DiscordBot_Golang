@@ -1,3 +1,5 @@
+// Contains commands used to update user configuration
+
 package commands
 
 import (
@@ -56,9 +58,8 @@ func ConfigHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 }
 
+// Send a message with the current user configuration
 func viewConfig(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	//show embed with current config options
-
 	users, err := utility.GetUserConfig()
 	if err != nil {
 		fmt.Println(err)
@@ -95,17 +96,21 @@ func viewConfig(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 }
 
+// Update the user configuration
 func updateConfig(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	//update player config
 	opts := i.ApplicationCommandData().Options[0]
 	users, err := utility.GetUserConfig()
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	// Gets color from drop down options when calling the command
 	newColor := opts.Options[0].Value.(string)
 	userId := i.Member.User.ID
 	user, ok := users[userId]
+	
+	// If user not found, create a new user with the desired property
+	// If the user already exists, updated their configuration with the new property
 	if !ok {
 		newUser := utility.Properties{Color: newColor}
 		users[userId] = newUser
